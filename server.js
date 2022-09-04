@@ -1,7 +1,10 @@
 const express = require("express");
 const expressSession = require("express-session");
-// const connectSessionSequelize = require("connect-session-sequelize");
+const connectSessionSequelize = require("connect-session-sequelize")(
+  expressSession.Store
+);
 
+const routes = require("./controllers/index");
 const sequelize = require("./config/connection");
 
 const app = express();
@@ -11,13 +14,15 @@ const sessionOptions = {
   secret: process.env.SESSION_SECRET,
   resave: true,
   saveUninitialized: false,
+  store: new connectSessionSequelize({ db: sequelize }),
   rolling: true,
   cookie: { maxAge: 60000 },
 };
 
 app.use(expressSession(sessionOptions));
-app.use(express.json());
+app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
+app.use(routes);
 
 const init = async () => {
   try {

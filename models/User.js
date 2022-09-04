@@ -20,6 +20,10 @@ const schema = {
       isEmail: true,
     },
   },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 };
 
 const options = {
