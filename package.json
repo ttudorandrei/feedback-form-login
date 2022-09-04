@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev":"nodemon server.js"
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -20,8 +20,10 @@
   },
   "homepage": "https://github.com/ttudorandrei/feedback-form-login#readme",
   "dependencies": {
+    "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "express-session": "^1.17.3",
+    "mysql2": "^2.3.3",
     "sequelize": "^6.21.4"
   },
   "devDependencies": {
