@@ -1,8 +1,14 @@
 const { Model, DataTypes } = require("sequelize");
+const bcrypt = require("bcrypt");
 
 const sequelize = require("../config/connection");
+const hooks = require("../hooks/index.js");
 
-class User extends Model {}
+class User extends Model {
+  async isPasswordValid(password) {
+    return await bcrypt.compare(password, this.password);
+  }
+}
 
 const schema = {
   id: {
@@ -27,6 +33,7 @@ const schema = {
 };
 
 const options = {
+  hooks,
   sequelize,
   timestamps: true,
   freezeTableName: true,
