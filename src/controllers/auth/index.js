@@ -5,7 +5,15 @@ const router = Router();
 
 router.post("/signup", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, confirmPassword } = req.body;
+
+    console.log(req.body);
+
+    if (password !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ message: "Failed to signup, passwords don't match!" });
+    }
 
     // if email and password are truthy, create the user
     if (email && password) {
