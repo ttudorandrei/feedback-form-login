@@ -24,7 +24,7 @@ const sessionOptions = {
 const hbs = handlebars.create({});
 
 app.engine("handlebars", hbs.engine);
-app.set("view engine", "handlebars1");
+app.set("view engine", "handlebars");
 
 app.use(expressSession(sessionOptions));
 app.use(express.json({ extended: true }));
