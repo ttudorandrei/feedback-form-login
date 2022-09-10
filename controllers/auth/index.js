@@ -20,7 +20,7 @@ router.post("/signup", async (req, res) => {
       .status(400)
       .json({ message: "Failed to signup, missing credentials!" });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to signup" });
+    return res.status(500).json({ message: error.message });
   }
 });
 
@@ -46,6 +46,15 @@ router.post("/login", async (req, res) => {
     return res.status(500).json({ message: "Login failed" });
   }
 });
-router.post("/logout", () => {});
+
+router.post("/logout", (req, res) => {
+  if (req.session.isLoggedIn) {
+    req.session.destroy(() => {
+      return res.status(200).json({ message: "Logged out successfully!" });
+    });
+  } else {
+    return res.status(500).json({ message: "Failed to log out" });
+  }
+});
 
 module.exports = router;
