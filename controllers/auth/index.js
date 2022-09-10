@@ -7,6 +7,7 @@ router.post("/signup", async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // if email and password are truthy, create the user
     if (email && password) {
       await User.create({
         email,
@@ -16,10 +17,12 @@ router.post("/signup", async (req, res) => {
       return res.status(200).json({ message: "User registered!" });
     }
 
+    // else alert about missing credentials
     return res
       .status(400)
       .json({ message: "Failed to signup, missing credentials!" });
   } catch (error) {
+    // catch the error and display the error message
     return res.status(500).json({ message: error.message });
   }
 });
@@ -30,12 +33,20 @@ router.post("/login", async (req, res) => {
 
     const user = await User.findOne({ where: { email } });
 
+    // handle case if there is no user
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // we would have to check the password matches but we'll skip that for now
+    // check if password is valid
+    const passwordValid = await user.isPasswordValid(password);
 
+    // handle if the password is not valid
+    if (!passwordValid) {
+      return res.status(401).json({ error: "Failed to login" });
+    }
+
+    // store required data in the session
     req.session.save(() => {
       req.session.isLoggedIn = true;
       req.session.email = user.email;
@@ -48,6 +59,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", (req, res) => {
+  // if there's a session, destroy it
   if (req.session.isLoggedIn) {
     req.session.destroy(() => {
       return res.status(200).json({ message: "Logged out successfully!" });
