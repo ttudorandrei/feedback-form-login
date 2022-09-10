@@ -1,4 +1,6 @@
 const express = require("express");
+const path = require("path");
+const handlebars = require("express-handlebars");
 const expressSession = require("express-session");
 const connectSessionSequelize = require("connect-session-sequelize")(
   expressSession.Store
@@ -19,9 +21,15 @@ const sessionOptions = {
   cookie: { maxAge: 60000 },
 };
 
+const hbs = handlebars.create({});
+
+app.engine("handlebars", hbs.engine);
+app.set("view engine", "handlebars1");
+
 app.use(expressSession(sessionOptions));
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "../", "public")));
 app.use(routes);
 
 const init = async () => {
